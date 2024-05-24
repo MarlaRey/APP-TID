@@ -1,0 +1,92 @@
+.theContainer{
+    margin-top: 2rem;
+    color: black;
+.theButtons{
+  
+    button {
+        margin:  0 0.5rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        background-color: black;
+        color: #fff;
+        cursor: pointer;
+        transition: border-color 0.25s;
+
+      }
+      
+      button:hover {
+        background-color: #E46D3A
+      }
+      
+      button:focus,
+      button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
+        background-color: #E46D3A;
+      }
+}}
+
+.hvorlaenge{
+    padding-bottom: 2rem;
+    color: #E46D3A;
+
+}
+.formen{
+    display: flex;
+    justify-content: center;
+  
+}
+.p{
+    
+    padding: 0.5rem;
+}
+
+.theTimer {
+    background-color: rgb(242, 240, 240);
+    border: #E46D3A solid 2px;
+    margin: 2rem;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+  
+    .hoursDone, .hoursMissing {
+      margin: 1rem 0;
+  
+      p {
+        margin: 0;
+        font-weight: bold;
+      }
+  
+      input[type="number"] {
+
+        padding: 5px;
+        margin-left: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+
+      }
+      button {
+        margin-top:  2rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        background-color: #E46D3A;
+        color: #fff;
+        cursor: pointer;
+        transition: border-color 0.25s;
+      }
+      
+      button:hover {
+        background-color: #E46D3A
+      }
+      
+
+    }
+  }
