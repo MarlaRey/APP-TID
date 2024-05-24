@@ -40,6 +40,21 @@ export default defineConfig({
                 purpose: 'maskable'
             }
         ],
+        "screenshots": [
+          {
+            "src": "screenshots/Skærmbillede 2024-05-24 103443.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+          },
+
+          {
+            "src": "screenshots/Skærmbillede 2024-05-24 105948.png",
+            "sizes": "373x666",
+            "type": "image/png",
+            "form_factor": "narrow"
+          }
+        ]
       }, 
     })
   ],
