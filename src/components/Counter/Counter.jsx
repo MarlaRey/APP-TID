@@ -10,32 +10,59 @@ export const Counter = ({ todos }) => {
   const [showModal, setShowModal] = useState(false);
   const [timeSet, setTimeSet] = useState(false); // Ny tilstand for at spore, om arbejdstiden er indstillet
   const timerRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  useEffect(() => {
+    const savedStartTime = localStorage.getItem('startTime');
+    const savedTotalWorkTime = localStorage.getItem('totalWorkTime');
+
+    if (savedStartTime && savedTotalWorkTime) {
+      const now = Date.now();
+      const startTime = new Date(savedStartTime).getTime();
+      const elapsed = now - startTime;
+      const total = parseInt(savedTotalWorkTime, 10);
+
+      if (elapsed >= total) {
+        setElapsedTime(total);
+        setRemainingTime(0);
+        setIsWorking(false);
+        setShowModal(true);
+      } else {
+        setElapsedTime(elapsed);
+        setRemainingTime(total - elapsed);
+        setIsWorking(true);
+        setTimeSet(true);
+      }
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, []);
 
   useEffect(() => {
     if (isWorking) {
       timerRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 1000);
         setRemainingTime((prev) => prev - 1000);
+
+        if (remainingTime <= 1000) {
+          clearInterval(timerRef.current);
+          setIsWorking(false);
+          setShowModal(true);
+        }
       }, 1000);
     } else if (!isWorking && timerRef.current) {
       clearInterval(timerRef.current);
     }
+
     return () => clearInterval(timerRef.current);
-  }, [isWorking]);
-
-  useEffect(() => {
-    if (remainingTime <= 0 && isWorking) {
-      setIsWorking(false);
-      setShowModal(true);
-    }
-  }, [remainingTime, isWorking]);
-
-  useEffect(() => {
-    setRemainingTime(totalWorkTime);
-  }, [totalWorkTime]);
+  }, [isWorking, remainingTime]);
 
   const handleStartWork = () => {
+    const now = Date.now();
+    localStorage.setItem('startTime', new Date(now).toISOString());
+    localStorage.setItem('totalWorkTime', totalWorkTime);
     setIsWorking(true);
+    startTimeRef.current = now;
   };
 
   const handlePauseWork = () => {
@@ -50,6 +77,7 @@ export const Counter = ({ todos }) => {
     setTotalWorkTime(totalMilliseconds);
     setRemainingTime(totalMilliseconds);
     setTimeSet(true); // Indstil tid til sand
+    localStorage.setItem('totalWorkTime', totalMilliseconds);
   };
 
   const formatTime = (time) => {
@@ -63,6 +91,8 @@ export const Counter = ({ todos }) => {
     setShowModal(false);
     setElapsedTime(0);
     setRemainingTime(totalWorkTime);
+    localStorage.removeItem('startTime');
+    localStorage.removeItem('totalWorkTime');
   };
 
   const completedTasks = todos.filter(task => task.completed);
@@ -125,22 +155,21 @@ export const Counter = ({ todos }) => {
         <Modal 
           message={
             <>
-              <h3>SÅDAN! Du har fri nu :)</h3>
-              <p>Du har idag, den {getCurrentDate()} <br /> arbejdet {formatTime(elapsedTime)} timer <br /></p>
-              <h4>Du fik vinget disse opgaver af:</h4>
+              <h3>Sådan! Du har fri nu</h3>
+              <p>Du har idag, den {getCurrentDate()} arbejdet {formatTime(elapsedTime)} timer</p>
+              <h4>Du fik lavet disse opgaver:</h4>
               <ul>
                 {completedTasks.map((task, index) => (
                   <li key={index}>{task.text}</li>
                 ))}
               </ul>
-              <h4>Du ville gerne have lavet dette:</h4>
+              <h4>Du ville gerne have lavet disse opgaver, men det må du gøre i morgen:</h4>
               <ul>
                 {incompleteTasks.map((task, index) => (
                   <li key={index}>{task.text}</li>
                 ))}
               </ul>
-              <h5> - men det kan du jo se på i morgen...</h5>
-              <h6 className={styles.screen}>Tag et screenshot af dit gode arbejde </h6>
+              <p>Tag et screenshot af dit gode arbejde :)</p>
             </>
           } 
           onClose={closeModal} 
